@@ -12,23 +12,17 @@ This toolkit aims to automate those workflows while serving as a hands-on learni
 
 - General DNS Lookup
     - Query A, AAAA, MX, and TXT records
-    - Return all published records for the requested record type
-    - Validate supported DNS record types
-    - Confirm whether a domain exists
+    - Return MX records with preference values
+    - Confirm whether a domain exists and has requested DNS records
     - Distinguish between Null MX and domains with no published MX records
+    - Identify and return published SPF records
+    - Report when no SPF record is found
 
 ## Usage
 
-Run `python main.py`, enter a domain, and select a supported DNS record type.
+Run `python main.py`, enter a domain, and select a supported DNS record type: A, AAAA, MX, or TXT.
 
-Currently supported record types:
-
-- A
-- AAAA
-- MX
-- TXT
-
-Basic error handling is included for non-existent domains, unsupported record types, DNS queries with no published records, and Null MX records.
+TXT lookups inspect published records for SPF (`v=spf1`) and return the SPF policy when found. Basic error handling is included for non-existent domains, missing DNS records, Null MX, unsupported record types, and domains without a published SPF record.
 
 ## Example Outputs
 
@@ -38,6 +32,16 @@ Domain: mimecast.com
 Record Type: MX  
 10 service-alpha-inbound-a.mimecast.com.  
 10 service-alpha-inbound-b.mimecast.com.
+
+## TXT Lookup
+
+Domain: mimecast.com
+Record Type: TXT
+v=spf1 redirect=aojpw1q8._spf._d.mim.ec
+
+Domain: justtxt.joshdata.me
+Record Type: TXT
+No SPF record found.
 
 ### A Lookup
 
@@ -66,11 +70,11 @@ Unsupported record type.
 ## Project Structure
 
 `main.py` - Command-line entry point and user input validation  
-`toolkit/dns_lookup.py` - DNS lookup and response handling
+`toolkit/dns_lookup.py` - DNS lookup and SPF detection utility
 
 ## Planned Features
 
-- SPF validation
+- Advanced SPF parsing and validation
 - WHOIS lookup
 - DMARC parser
 - REST API
