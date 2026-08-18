@@ -10,42 +10,66 @@ This toolkit aims to automate those workflows while serving as a hands-on learni
 
 ## Current Features
 
-- MX Lookup
-    - Query domain
-    - Return all MX records with preference values
-    - Confirm whether domain exists and has MX records
+- General DNS Lookup
+    - Query A, AAAA, MX, and TXT records
+    - Return all published records for the requested record type
+    - Validate supported DNS record types
+    - Confirm whether a domain exists
     - Distinguish between Null MX and domains with no published MX records
 
 ## Usage
 
-`python main.py`
-Domain:  
+Run `python main.py`, enter a domain, and select a supported DNS record type.
 
-Basic error handling is built in for non-existent domains, domains without published MX records, and Null MX records.
+Currently supported record types:
+
+- A
+- AAAA
+- MX
+- TXT
+
+Basic error handling is included for non-existent domains, unsupported record types, DNS queries with no published records, and Null MX records.
 
 ## Example Outputs
 
-```
-Domain: dsa.org
-20 dsa-org.mx2-us.mailanyone.net.
-30 dsa-org.mx3-us.mailanyone.net.
-10 dsa-org.mx1-us.mailanyone.net.
+### MX Lookup
 
-Domain: FraserWeisz4Evr.com
-FraserWeisz4Evr.com does not exist.
+Domain: mimecast.com  
+Record Type: MX  
+10 service-alpha-inbound-a.mimecast.com.  
+10 service-alpha-inbound-b.mimecast.com.
 
-Domain: example.com
+### A Lookup
+
+Domain: gmail.com  
+Record Type: A  
+142.251.41.133
+
+### AAAA Lookup
+
+Domain: google.com  
+Record Type: AAAA  
+2607:f8b0:4009:800::200e
+
+### Null MX
+
+Domain: example.com  
+Record Type: MX  
 example.com publishes a Null MX record and does not accept mail.
-```
+
+### Unsupported Record Type
+
+Domain: mimecast.com  
+Record Type: BANANAS  
+Unsupported record type.
 
 ## Project Structure
 
-`main.py` - Main program, collect input to pass to toolkit
-`toolkit/dns_lookup.py` - Perform MX lookup and interpret DNS response
+`main.py` - Command-line entry point and user input validation  
+`toolkit/dns_lookup.py` - DNS lookup and response handling
 
 ## Planned Features
 
-- Advanced DNS lookup
 - SPF validation
 - WHOIS lookup
 - DMARC parser
